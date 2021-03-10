@@ -21,6 +21,7 @@ SortIncludes: false
 AccessModifierOffset: -4
 ColumnLimit: 80
 NamespaceIndentation: None
+FixNamespaceComments: true
 AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: false

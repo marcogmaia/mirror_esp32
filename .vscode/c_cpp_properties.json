@@ -2,9 +2,29 @@
     "configurations": [
         {
             "name": "ESP32-linux",
-            "includePath": [],
+            "includePath": [
+                "${workspaceFolder}/build/config",
+                "${env:IDF_PATH}/components/freertos/include",
+                "${env:IDF_PATH}/components/freertos/xtensa/include",
+                "${env:IDF_PATH}/components/esp_common/include",
+                "${env:IDF_PATH}/components/xtensa/include",
+                "${env:IDF_PATH}/components/xtensa/esp32/include",
+                "${env:IDF_PATH}/components/esp_rom/include",
+                "${env:IDF_PATH}/components/esp_timer/include",
+                "${env:IDF_PATH}/components/soc/include",
+                "${env:IDF_PATH}/components/soc/src/esp32/include",
+                "${env:IDF_PATH}/components/soc/soc/esp32/include",
+                "${env:IDF_PATH}/components/heap/include",
+                "${env:IDF_PATH}/components/esp_system/include",
+                "${env:IDF_PATH}/components/driver/include",
+                "${env:IDF_PATH}/components/esp32/include",
+                "${env:IDF_PATH}/components/soc/soc/include"
+            ],
             "browse": {
-                "path": [],
+                "path": [
+                    "${env:IDF_PATH}/components/**",
+                    "${workspaceFolder}/components/**"
+                ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db"
             },

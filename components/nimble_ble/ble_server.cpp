@@ -96,7 +96,7 @@ static void bleprph_advertise(void) {
         fields.name_is_complete = 1;
 
         /* No memory for 128 bit adv (error msg size) */
-        static ble_uuid128_t adv_svc_uuid = GATT_SVC_1_UUID;
+        static ble_uuid128_t adv_svc_uuid = GATT_SVC_ADV_UUID;
         fields.uuids128                   = &adv_svc_uuid;
         fields.num_uuids128               = 1;
         fields.uuids128_is_complete       = 1;

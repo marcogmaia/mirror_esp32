@@ -23,11 +23,6 @@
 #include <ctime>
 #include <utility>
 
-// #include "rtc.hpp"
-// #include "display.hpp"
-// #include "panel_controller.hpp"
-// #include "ble_message_types.hpp"
-
 #include "esp_err.h"
 #include "esp_log.h"
 
@@ -41,21 +36,9 @@
 static constexpr auto* TAG = "GATT";
 
 /* UUIDs of Services and Characteristics */
-/* 5f8fa7ee-a9b8-11e9-a2a3-2a2ae2dbcce4 */
-static const ble_uuid128_t gatt_svr_svc_uuid = GATT_SVC_1_UUID;
-/* 5f8fabc2-a9b8-11e9-a2a3-2a2ae2dbcce4 */
-static const ble_uuid128_t gatt_svr_chr_prices_uuid = GATT_CHR_PRICES_UUID;
-/* 5f8faea6-a9b8-11e9-a2a3-2a2ae2dbcce4 */
-static const ble_uuid128_t gatt_svr_chr_datetime_uuid = GATT_CHR_DATETIME_UUID;
-/* 5f8fb428-a9b8-11e9-a2a3-2a2ae2dbcce4 */
-static const ble_uuid128_t gatt_svr_chr_sched_uuid = GATT_CHR_LUM_SCHED_UUID;
-/* 5f8fb55e-a9b8-11e9-a2a3-2a2ae2dbcce4 */
-static const ble_uuid128_t gatt_svr_chr_change_pass_uuid
-    = GATT_CHR_CHANGE_PASS_UUID;
+static constexpr ble_uuid128_t uuid_svc_adv         = GATT_SVC_ADV_UUID;
+static constexpr ble_uuid128_t uuid_char_brightness = GATT_CHAR_BRIGHTNESS_UUID;
 
-// namespace guid {
-//    constexpr ble_uuid128_t 
-// }
 
 static int gatt_svr_chr_access(uint16_t conn_handle, uint16_t attr_handle,
                                struct ble_gatt_access_ctxt* ctxt, void* arg);
@@ -67,12 +50,13 @@ static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
     {
         /*** Service: Security test. */
         .type            = BLE_GATT_SVC_TYPE_PRIMARY,  // type
-        .uuid            = &gatt_svr_svc_uuid.u,       // uuid
+        .uuid            = &uuid_svc_adv.u,       // uuid
         .includes        = nullptr,
         .characteristics =  
         (struct ble_gatt_chr_def[]){
             {
                 // .uuid      = &guid_char_brightness.u,   // uuid
+                .uuid      = &uuid_char_brightness.u,   // uuid
                 .access_cb = gatt_svr_chr_access,  // access_cb
                 // nullptr, // nullptr,
                 .flags = BLE_GATT_CHR_F_WRITE,  // | BLE_GATT_CHR_F_WRITE_ENC,
@@ -151,21 +135,21 @@ static int gatt_svr_chr_access(uint16_t conn_handle, uint16_t attr_handle,
 
 
     /* Determine which characteristic is being accessed by examining its
-     * 128-bit UUID.
+     ! 128-bit UUID.
      */
 
     /// change pass
-    if(ble_uuid_cmp(uuid, &gatt_svr_chr_change_pass_uuid.u) == 0) {
-        uint32_t newpass = 0;
+    if(ble_uuid_cmp(uuid, &uuid_char_brightness.u) == 0) {
+        // uint32_t newpass = 0;
         // rc = gatt_svr_chr_write(ctxt->om, sizeof pass, sizeof pass, &pass,
         //                         nullptr);
-        memcpy(&newpass, p_data, sizeof newpass);
+        // memcpy(&newpass, p_data, sizeof newpass);
 
 
         // print changed pass info to user and to log
-        static char str_pass[16];
-        snprintf(str_pass, 15, "%06d", newpass);
-        ESP_LOGI(TAG, "Password changed to %s", str_pass);
+        // static char str_pass[16];
+        // snprintf(str_pass, 15, "%06d", newpass);
+        // ESP_LOGI(TAG, "Password changed to %s", str_pass);
 
         return rc;
     }

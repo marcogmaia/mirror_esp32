@@ -1,12 +1,20 @@
 {
-    "clangtidy.sourcePath": "${workspaceFolder};main;",
+    "clangtidy.sourcePath": "${workspaceFolder};main;components/board_configs;components/leds;components/nimble_ble",
     "clangtidy.buildPath": "${workspaceFolder}/build",
     "clangtidy.parallelTasks": 8,
     "C_Cpp.clang_format_style": "file",
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
     "editor.formatOnSave": false,
-    
+
+    "doxdocgen.generic.authorName": "Marco A. G. Maia",
+    "doxdocgen.generic.useGitUserEmail": true,
+    "doxdocgen.generic.briefTemplate": "@brief {text}",
+    "doxdocgen.file.copyrightTag": [
+        "@copyright Copyright (c) {year}"
+    ],
+
     "files.associations": {
         "cstdio": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }
