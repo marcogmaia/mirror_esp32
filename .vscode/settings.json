@@ -1,0 +1,12 @@
+{
+    "clangtidy.sourcePath": "${workspaceFolder};main;",
+    "clangtidy.buildPath": "${workspaceFolder}/build",
+    "clangtidy.parallelTasks": 8,
+    "C_Cpp.clang_format_style": "file",
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "editor.formatOnSave": false,
+    
+    "files.associations": {
+        "cstdio": "cpp"
+    }
+}
