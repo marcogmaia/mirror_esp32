@@ -1,0 +1,8 @@
+*build/
+trace/
+# sdkconfig
+sdkconfig.old
+.vscode/browse.*
+.vscode/settings.json
+Annotations/
+checks.json

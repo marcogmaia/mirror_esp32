@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "ESP32-linux",
+            "includePath": [],
+            "browse": {
+                "path": [],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db"
+            },
+            "intelliSenseMode": "gcc-arm",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "compilerPath": "${env:HOME}/esp/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc",
+            "defines": [],
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+        }
+    ],
+    "version": 4
+}
