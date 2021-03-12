@@ -16,15 +16,28 @@
 
 #include "leds.hpp"
 #include "board_configs.hpp"
+#include "storage.hpp"
 
 namespace leds {
 
 namespace {
 
+constexpr TickType_t minute_in_ticks = pdMS_TO_TICKS(1000 * 60);
+
 constexpr auto TAG = "LEDS";
 constexpr ledc_timer_bit_t pwm_duty_resolution
     = ledc_timer_bit_t::LEDC_TIMER_11_BIT;
 constexpr uint32_t pwm_frequency = 20e3;
+
+uint8_t curr_bris[2] = {0};
+void set_current_brightness(message_t message) {
+    if(message.channel == channel_t::channel0) {
+        curr_bris[0] = message.brightness;
+    }
+    else {
+        curr_bris[1] = message.brightness;
+    }
+}
 
 void m_set_brightness(channel_t channel, uint8_t brightness) {
     // XXX I can receive directly the full range [0-2047]
@@ -51,23 +64,53 @@ void m_set_brightness(channel_t channel, uint8_t brightness) {
     }
 }
 
-const QueueHandle_t q_brightness = xQueueCreate(sizeof(message_t), 4);
+const QueueHandle_t q_brightness = xQueueCreate(sizeof(message_t), 10);
 void task(void* ignore) {
     while(true) {
         message_t message;
         xQueueReceive(q_brightness, &message, portMAX_DELAY);
+        set_current_brightness(message);
         ESP_LOGI(TAG, "ch: %u, bri: %03u", message.channel, message.brightness);
         m_set_brightness(message.channel, message.brightness);
     }
 }
 
+void task_save_values(void* ignore) {
+    while(true) {
+        vTaskDelay(minute_in_ticks);
+        ESP_LOGI(TAG, "saving current brightness to NVS.");
+        storage::set_values(curr_bris);
+    }
+}
+
+void get_saved_values() {
+    uint8_t bri[2];
+    storage::get_values(bri);
+    message_t message0 = {
+        channel0,
+        bri[0],
+    };
+    message_t message1 = {
+        channel1,
+        bri[1],
+    };
+    ESP_LOGI(TAG, "got saved brightness: %03u, %03u", bri[0], bri[1]);
+    push_message(message0);
+    push_message(message1);
+}
 
 }  // namespace
 
 
 void push_message(const message_t& message) {
-    xQueueSend(q_brightness, &message, 0);
+    auto ret = xQueueSend(q_brightness, &message, 0);
+    if(ret == errQUEUE_FULL) {
+        message_t rxbuf;
+        xQueueReceive(q_brightness, &rxbuf, 0);
+        xQueueSend(q_brightness, &message, 0);
+    }
 }
+
 
 void init() {
     static bool initialized = false;
@@ -75,7 +118,6 @@ void init() {
         return;
     }
     initialized = true;
-
 
     ledc_channel_config_t chan0_conf = {
         .gpio_num   = board_configs::GPIO_LED_IN,
@@ -111,6 +153,11 @@ void init() {
     xTaskCreatePinnedToCore(task, "ledsTask", configMINIMAL_STACK_SIZE * 3,
                             nullptr, board_configs::default_task_priority,
                             nullptr, APP_CPU_NUM);
+    xTaskCreatePinnedToCore(
+        task_save_values, "saveValues", configMINIMAL_STACK_SIZE * 2, nullptr,
+        board_configs::default_task_priority, nullptr, APP_CPU_NUM);
+
+    get_saved_values();
 }
 
 

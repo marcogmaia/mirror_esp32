@@ -6,5 +6,5 @@ idf_component_register(
     PRIV_REQUIRES esp_adc_cal
 
     REQUIRES
-    nvs_flash nimble_ble leds
+    nvs_flash nimble_ble leds storage
 )

@@ -92,7 +92,6 @@ bool pass_invalid(uint32_t received_pass) {
 static int gatt_svr_chr_access(uint16_t conn_handle, uint16_t attr_handle,
                                struct ble_gatt_access_ctxt* ctxt, void* arg) {
     uint8_t buffer[256] = {0};
-    auto* p_data        = buffer;
     const auto* uuid    = ctxt->chr->uuid;
     uint16_t len        = 0;
     int rc              = gatt_svr_chr_write(ctxt->om, 0, 256, buffer, &len);

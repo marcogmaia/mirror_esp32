@@ -15,7 +15,9 @@
 
     "files.associations": {
         "cstdio": "cpp",
-        "ble_hs.h": "c"
+        "ble_hs.h": "c",
+        "ctime": "cpp",
+        "type_traits": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "idf.adapterTargetName": "esp32"

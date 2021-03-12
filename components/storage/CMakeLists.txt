@@ -1,12 +1,14 @@
 idf_component_register(
     SRCS
-    "leds.cpp"
+    "storage.cpp"
+   
     
     INCLUDE_DIRS 
     "."
     "include"
 
     PRIV_REQUIRES
+    nvs_flash
 
-    REQUIRES nimble_ble board_configs storage
+    REQUIRES 
 )

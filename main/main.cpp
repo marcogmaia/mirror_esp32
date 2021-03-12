@@ -9,30 +9,19 @@
  *
  *
  */
+#include <ctime>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "ble_server.h"
-#include "nvs_flash.h"
-#include "nvs.h"
-
+#include "storage.hpp"
 #include "leds.hpp"
+#include "ble_server.h"
 
-// init flash because BLE needs it
-static void flash_init() {
-    auto res = nvs_flash_init();
-    if(res == ESP_ERR_NVS_NO_FREE_PAGES
-       || res == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        res = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(res);
-}
+constexpr auto *TAG = "MAIN";
 
-// TODO salvar os preços na flash
 extern "C" void app_main(void) {
-    flash_init();
-    nimble_ble_init();
+    storage::init();
     leds::init();
+    nimble_ble_init();
 }
