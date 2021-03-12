@@ -1,8 +1,8 @@
 #pragma once
 
 /*
-e7946a77-561c-4e63-aae7-b5d6a9e15525
-1879224c-9358-4be2-8089-5750ca67756c
+e7946a77-561c-4e63-aae7-b5d6a9e15525 // in use
+1879224c-9358-4be2-8089-5750ca67756c // in use 
 46ac1f62-7e90-4d56-9adb-31e3663bb755
 24b83068-e707-4a19-b595-09cd62fb1b8c
 afe05301-efc2-4fb4-8bca-35446dae2f46
@@ -23,8 +23,8 @@ extern "C" {
         }                            \
     }
 
-// e7 94 6a 77-56 1c-4e 63-aa e7-b5 d6 a9 e1 55 25
-// e7946a77-561c-4e63-aae7-b5d6a9e15525
+// e7 94 64 77-56 1c-4e 63-aa e7-b5 d6 a9 e1 55 25
+// e7946477-561c-4e63-aae7-b5d6a9e15525
 #define GATT_SVC_ADV_UUID                                                      \
     BLE_UUID128_INIT(0x25, 0x55, 0xe1, 0xa9, 0xd6, 0xb5, 0xe7, 0xaa, 0x63, \
                      0x4e, 0x1c, 0x56, 0x77, 0x64, 0x94, 0xe7);

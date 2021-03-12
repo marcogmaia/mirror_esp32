@@ -27,12 +27,12 @@
 #include "host/ble_hs_pvcy.h"
 #include "nimble/nimble_port.h"
 #include "nimble/nimble_port_freertos.h"
-#include "ble_server.h"
 #include "services/gap/ble_svc_gap.h"
+#include "ble_server.h"
 
 #include "uuids.h"
 
-static const char *tag = "NimBLE_BLE_PRPH";
+static auto *tag = "BLE_SERVER";
 static int bleprph_gap_event(struct ble_gap_event *event, void *arg);
 static uint8_t own_addr_type;
 

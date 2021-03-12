@@ -10,5 +10,5 @@ idf_component_register(
 
     PRIV_REQUIRES
 
-    REQUIRES bt nvs_flash log
+    REQUIRES bt nvs_flash log leds
 )

@@ -1,5 +1,5 @@
 {
-    "clangtidy.sourcePath": "${workspaceFolder};main;components/board_configs;components/leds;components/nimble_ble",
+    "clangtidy.sourcePath": "${workspaceFolder};main;components/board_configs;components/leds;",
     "clangtidy.buildPath": "${workspaceFolder}/build",
     "clangtidy.parallelTasks": 8,
     "C_Cpp.clang_format_style": "file",
@@ -14,7 +14,9 @@
     ],
 
     "files.associations": {
-        "cstdio": "cpp"
+        "cstdio": "cpp",
+        "ble_hs.h": "c"
     },
-    "C_Cpp.errorSquiggles": "Enabled"
+    "C_Cpp.errorSquiggles": "Enabled",
+    "idf.adapterTargetName": "esp32"
 }

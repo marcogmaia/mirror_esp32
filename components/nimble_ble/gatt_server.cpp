@@ -1,20 +1,12 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+/**
+ * @file gatt_server.cpp
+ * @author Marco A. G. Maia (marcogmaia@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2021-03-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
  */
 
 #include <cassert>
@@ -32,6 +24,7 @@
 #include "ble_server.h"
 #include "uuids.h"
 
+#include "leds.hpp"
 
 static constexpr auto* TAG = "GATT";
 
@@ -48,7 +41,6 @@ static int gatt_svr_chr_access(uint16_t conn_handle, uint16_t attr_handle,
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
     {
-        /*** Service: Security test. */
         .type            = BLE_GATT_SVC_TYPE_PRIMARY,  // type
         .uuid            = &uuid_svc_adv.u,       // uuid
         .includes        = nullptr,
@@ -63,12 +55,12 @@ static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
                                                 // flags
             },
             {
-                0, /* No more characteristics in this service. */
+                0, // No more characteristics in this service.
             },
         },
     },
     {
-        0, /* No more services. */
+        0,  // No more services.
     },
 };
 
@@ -93,71 +85,34 @@ static int gatt_svr_chr_write(struct os_mbuf* om, uint16_t min_len,
 }
 
 bool pass_invalid(uint32_t received_pass) {
-    // TODO
-    return true;
+    // TODO pass_invalid ?
+    return false;
 }
 
 static int gatt_svr_chr_access(uint16_t conn_handle, uint16_t attr_handle,
                                struct ble_gatt_access_ctxt* ctxt, void* arg) {
-    int rc              = 0;
     uint8_t buffer[256] = {0};
     auto* p_data        = buffer;
     const auto* uuid    = ctxt->chr->uuid;
     uint16_t len        = 0;
-    rc                  = gatt_svr_chr_write(ctxt->om, 0, 256, buffer, &len);
+    int rc              = gatt_svr_chr_write(ctxt->om, 0, 256, buffer, &len);
 
+    // Determine which characteristic is being accessed by examining its
+    // ! 128-bit UUID.
 
-    // check if password is valid
-    uint32_t received_password = 0;
-    memcpy(&received_password, p_data, 4);
-    len -= sizeof received_password;
-    p_data += sizeof received_password;
-
-    // if invalid pass
-    if(pass_invalid(received_password)) {
-        ESP_LOGI(TAG, "Invalid pass.");
-        return rc;
-    }
-
-
-    time_t datetime = 0;
-    memcpy(&datetime, p_data, sizeof datetime);
-    len -= sizeof datetime;
-    p_data += sizeof datetime;
-
-    if(datetime != 0) {
-        struct tm tm = *localtime(&datetime);
-        ESP_LOGI(TAG, "\n\tdatetime:\n\t%02d:%02d:%02d - %02d/%02d/%02d",
-                 tm.tm_hour, tm.tm_min, tm.tm_sec, tm.tm_mday, tm.tm_mon + 1,
-                 tm.tm_year);
-        tm.tm_year += 1900;
-    }
-
-
-    /* Determine which characteristic is being accessed by examining its
-     ! 128-bit UUID.
-     */
-
-    /// change pass
+    // update brightness
     if(ble_uuid_cmp(uuid, &uuid_char_brightness.u) == 0) {
-        // uint32_t newpass = 0;
-        // rc = gatt_svr_chr_write(ctxt->om, sizeof pass, sizeof pass, &pass,
-        //                         nullptr);
-        // memcpy(&newpass, p_data, sizeof newpass);
-
-
-        // print changed pass info to user and to log
-        // static char str_pass[16];
-        // snprintf(str_pass, 15, "%06d", newpass);
-        // ESP_LOGI(TAG, "Password changed to %s", str_pass);
-
+        leds::message_t message;
+        constexpr auto msize = sizeof message;
+        rc = gatt_svr_chr_write(ctxt->om, msize, msize, &message, nullptr);
+        if(rc == 0) {
+            leds::push_message(message);
+        }
         return rc;
     }
 
-    /* Unknown characteristic; the nimble stack should not have called this
-     * function.
-     */
-    // assert(0);
+    // Unknown characteristic; the nimble stack should not have called this
+    // function.
     return BLE_ATT_ERR_UNLIKELY;
 }
 

@@ -30,6 +30,7 @@ static void flash_init() {
     ESP_ERROR_CHECK(res);
 }
 
+// TODO salvar os preços na flash
 extern "C" void app_main(void) {
     flash_init();
     nimble_ble_init();
